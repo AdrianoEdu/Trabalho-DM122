@@ -31,13 +31,28 @@ db.on("populate", async () => {
         name: pokemonName,
         picture: await downloadImage(buildUrl(i)),
         types: pokemon.types,
-        generation: 2
+        generation: 2,
+      }
+    ])
+  }
+
+  for (var i = 252; i <= 386; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 3,
       }
     ])
   }
 
   retrieveDataKanto();
   retrieveDataJohto();
+  retriveDataHoen();
 });
 
 db.open();
@@ -82,6 +97,15 @@ async function retrieveDataJohto() {
   document.body.appendChild(section);
 }
 
+async function retriveDataHoen() {
+  const pokemonList = await db.pokemon.toArray();
+
+  const section = document.getElementById("hoen");
+  const pokeHTML = selectList(pokemonList, 3);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
 retrieveDataKanto();
 
 async function getPokemonUrl(pokemonUrl) {
@@ -105,6 +129,8 @@ async function saveFormData(event) {
 
   await retrieveDataKanto();
   await retrieveDataJohto();
+  await retriveDataHoen();
+
   form.reset();
   form.name.focus();
   return false;
@@ -157,27 +183,22 @@ function selectionRegion() {
 
   const sectionKanto = document.getElementById("kanto");
   const sectionJohto = document.getElementById("johto");
+  const sectionHoen = document.getElementById("hoen");
 
   sectionKanto.style.display = "none";
   sectionJohto.style.display = "none";
+  sectionHoen.style.display = "none";
 
-  if (selectValue === "1") {
-    sectionKanto.style.display = "flex";
-    retrieveDataKanto();
-  }
-
-  if (selectValue === "2") {
-    sectionJohto.style.display = "flex";
-    retrieveDataJohto();
-  }
-}
-
-function getSectionByGenerationPokemon(generation) {
-  switch (generation) {
-    case 1:
-      return document.querySelector("section");
-    case 2:
-      return document.getElementById("johto");
+  switch (selectValue) {
+    case "1":
+      sectionKanto.style.display = "flex";
+      retrieveDataKanto();
+    case "2":
+      sectionJohto.style.display = "flex";
+      retrieveDataJohto();
+    case "3":
+      sectionHoen.style.display = "flex";
+      retriveDataHoen();
   }
 }
 
