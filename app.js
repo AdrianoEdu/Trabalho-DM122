@@ -16,6 +16,7 @@ db.on("populate", async () => {
       {
         name: pokemonName,
         picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
       },
     ]);
   }
@@ -53,17 +54,20 @@ async function retrieveData() {
   document.body.appendChild(section);
 
   function toHTML(poke) {
+
+    var style = selectGradientFromTypePokemon(poke);
+
     return `
         <a href="#" class="card-wrapper">
-          <div class="card" style="border-color: var(--grass);">
-            <div class="card-id" style="color: var(--grass);">${poke.id}</div>
+          <div class="card" style="border-color: var(--${poke.types[0].type.name});">
+            <div class="card-id" style="color: var(--${poke.types[0].type.name});">${poke.id}</div>
             <div class="card-image">
               <img alt="${poke.name}" src="${URL.createObjectURL(
       poke.picture
     )}">
             </div>
           </div>
-          <div class="card-name" style="background-color: var(--grass);">
+          <div class="card-name" style="${style};">
             ${poke.name}
           </div>
         </a>
@@ -103,6 +107,18 @@ async function saveOnDatabase({ name, pokeNumber }) {
       name,
       picture: await downloadImage(buildUrl(pokeNumber)),
     });
+  }
+}
+
+function selectGradientFromTypePokemon(poke) {
+  var type1 = poke.types[0].type.name;
+
+  if (poke.types.length > 1) {
+    var type2 = poke.types[1].type.name;
+    return `background : linear-gradient(var(--${type1}), var(--${type2}))`;
+  }
+  else {
+    return `background-color: var(--${type1})`;
   }
 }
 
