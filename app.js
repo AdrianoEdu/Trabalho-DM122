@@ -9,7 +9,7 @@ db.version(1).stores({
 db.on("populate", async () => {
 
   for (var i = 1; i <= 151; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)))
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
     const pokemonName = await pokemon.name;
 
     await db.pokemon.bulkPut([
@@ -17,11 +17,27 @@ db.on("populate", async () => {
         name: pokemonName,
         picture: await downloadImage(buildUrl(i)),
         types: pokemon.types,
+        generation: 1,
       },
     ]);
   }
 
-  retrieveData();
+  for (var i = 152; i <= 251; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 2
+      }
+    ])
+  }
+
+  retrieveDataKanto();
+  retrieveDataJohto();
 });
 
 db.open();
@@ -41,7 +57,7 @@ function byChar(char) {
   };
 }
 
-async function retrieveData() {
+async function retrieveDataKanto() {
   const pokemonList = await db.pokemon
     // .where("name")
     // .startsWithIgnoreCase("c")
@@ -49,32 +65,27 @@ async function retrieveData() {
     .toArray();
 
   const section = document.querySelector("section");
-  const pokeHTML = pokemonList.map(toHTML).join("");
+  const pokeHTML = selectList(pokemonList, 1);
+  console.log(pokeHTML);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
-
-  function toHTML(poke) {
-
-    var style = selectGradientFromTypePokemon(poke);
-
-    return `
-        <a href="#" class="card-wrapper">
-          <div class="card" style="border-color: var(--${poke.types[0].type.name});">
-            <div class="card-id" style="color: var(--${poke.types[0].type.name});">${poke.id}</div>
-            <div class="card-image">
-              <img alt="${poke.name}" src="${URL.createObjectURL(
-      poke.picture
-    )}">
-            </div>
-          </div>
-          <div class="card-name" style="${style};">
-            ${poke.name}
-          </div>
-        </a>
-    `;
-  }
 }
-retrieveData();
+
+async function retrieveDataJohto() {
+  const pokemonList = await db.pokemon
+    // .where("name")
+    // .startsWithIgnoreCase("c")
+    // .filter(byChar("a"))
+    .toArray();
+
+  const section = document.getElementById("johto");
+  const pokeHTML = selectList(pokemonList, 2);
+  console.log(pokeHTML);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
+retrieveDataKanto();
 
 async function getPokemonUrl(pokemonUrl) {
   const response = await fetch(pokemonUrl);
@@ -94,7 +105,9 @@ async function saveFormData(event) {
     name: form.name.value,
     pokeNumber: form.pokeNumber.value,
   });
-  retrieveData();
+
+  retrieveDataKanto();
+  retrieveDataJohto();
   form.reset();
   form.name.focus();
   return false;
@@ -107,6 +120,45 @@ async function saveOnDatabase({ name, pokeNumber }) {
       name,
       picture: await downloadImage(buildUrl(pokeNumber)),
     });
+  }
+}
+
+function toHTML(poke) {
+  var style = selectGradientFromTypePokemon(poke);
+
+  return `
+      <a href="#" class="card-wrapper">
+        <div class="card" style="border-color: var(--${poke.types[0].type.name});">
+          <div class="card-id" style="color: var(--${poke.types[0].type.name});">${poke.id}</div>
+          <div class="card-image">
+            <img alt="${poke.name}" src="${URL.createObjectURL(
+    poke.picture
+  )}">
+          </div>
+        </div>
+        <div class="card-name" style="${style};">
+          ${poke.name}
+        </div>
+      </a>
+  `;
+}
+
+function selectList(pokemonList, id) {
+  const pokemon = pokemonList.map((poke) => {
+    if (poke.generation === id) {
+      return toHTML(poke);
+    }
+  }).join("");
+
+  return pokemon;
+}
+
+function getSectionByGenerationPokemon(generation) {
+  switch (generation) {
+    case 1:
+      return document.querySelector("section");
+    case 2:
+      return document.getElementById("johto");
   }
 }
 
