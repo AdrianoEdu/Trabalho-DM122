@@ -52,7 +52,6 @@ function buildPokemonUrl(pokeNumber) {
 
 function byChar(char) {
   return function (poke) {
-    console.log(poke.name);
     return poke.name.includes(char);
   };
 }
@@ -64,9 +63,8 @@ async function retrieveDataKanto() {
     // .filter(byChar("a"))
     .toArray();
 
-  const section = document.querySelector("section");
+  const section = document.getElementById("kanto");
   const pokeHTML = selectList(pokemonList, 1);
-  console.log(pokeHTML);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
 }
@@ -80,7 +78,6 @@ async function retrieveDataJohto() {
 
   const section = document.getElementById("johto");
   const pokeHTML = selectList(pokemonList, 2);
-  console.log(pokeHTML);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
 }
@@ -106,8 +103,8 @@ async function saveFormData(event) {
     pokeNumber: form.pokeNumber.value,
   });
 
-  retrieveDataKanto();
-  retrieveDataJohto();
+  await retrieveDataKanto();
+  await retrieveDataJohto();
   form.reset();
   form.name.focus();
   return false;
@@ -153,6 +150,28 @@ function selectList(pokemonList, id) {
   return pokemon;
 }
 
+
+function selectionRegion() {
+  var select = document.getElementById("regionPokemon");
+  var selectValue = select.value;
+
+  const sectionKanto = document.getElementById("kanto");
+  const sectionJohto = document.getElementById("johto");
+
+  sectionKanto.style.display = "none";
+  sectionJohto.style.display = "none";
+
+  if (selectValue === "1") {
+    sectionKanto.style.display = "flex";
+    retrieveDataKanto();
+  }
+
+  if (selectValue === "2") {
+    sectionJohto.style.display = "flex";
+    retrieveDataJohto();
+  }
+}
+
 function getSectionByGenerationPokemon(generation) {
   switch (generation) {
     case 1:
@@ -173,6 +192,9 @@ function selectGradientFromTypePokemon(poke) {
     return `background-color: var(--${type1})`;
   }
 }
+
+const select = document.getElementById("regionPokemon");
+select.onchange = selectionRegion;
 
 const form = document.querySelector("form");
 form.addEventListener("submit", saveFormData);
