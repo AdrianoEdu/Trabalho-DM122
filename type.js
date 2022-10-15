@@ -2,7 +2,6 @@ import Dexie from "https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.mjs";
 
 
 const db = new Dexie("typeDB");
-const listTypePokemon = ["normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "eletric", "psychic", "ice", "dragon", "dark", "fairy"]
 
 db.version(1).stores({
     type: "++id,name",
@@ -41,5 +40,9 @@ async function loadImageToBlob(typeName) {
 }
 
 function selectTypeImage(typeName) {
-    return ``
+    if (typeName === "fairy") {
+        return `https://raw.githubusercontent.com/AdrianoEdu/Trabalho-DM122/main/images/type/${typeName}.png`
+    }
+
+    return `https://raw.githubusercontent.com/AdrianoEdu/Trabalho-DM122/main/images/type/${typeName}.webp`
 }
