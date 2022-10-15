@@ -50,10 +50,77 @@ db.on("populate", async () => {
     ])
   }
 
-  retrieveDataKanto();
-  retrieveDataJohto();
-  retriveDataHoen();
+  for (var i = 387; i <= 493; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 4,
+      }
+    ])
+  }
+
+  for (var i = 494; i <= 649; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 5,
+      }
+    ])
+  }
+
+  for (var i = 650; i <= 721; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 6,
+      }
+    ])
+  }
+
+  for (var i = 722; i <= 809; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 7,
+      }
+    ])
+  }
+
+  for (var i = 810; i <= 905; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: 8,
+      }
+    ])
+  }
 });
+
 
 db.open();
 
@@ -79,6 +146,7 @@ async function retrieveDataKanto() {
     .toArray();
 
   const section = document.getElementById("kanto");
+  section.style.display = "flex";
   const pokeHTML = selectList(pokemonList, 1);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
@@ -92,16 +160,63 @@ async function retrieveDataJohto() {
     .toArray();
 
   const section = document.getElementById("johto");
+  section.style.display = "flex";
   const pokeHTML = selectList(pokemonList, 2);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
 }
 
-async function retriveDataHoen() {
+async function retrieveDataHoen() {
   const pokemonList = await db.pokemon.toArray();
 
   const section = document.getElementById("hoen");
+  section.style.display = "flex";
   const pokeHTML = selectList(pokemonList, 3);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
+async function retrieveDataSinnoh() {
+  const pokemonList = await db.pokemon.toArray();
+  const section = document.getElementById("sinnoh");
+  section.style.display = "flex";
+  const pokeHTML = selectList(pokemonList, 4);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
+async function retrieveDataUnova() {
+  const pokemonList = await db.pokemon.toArray();
+  const section = document.getElementById("unova");
+  section.style.display = "flex";
+  const pokeHTML = selectList(pokemonList, 5);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
+async function retrieveDataKalos() {
+  const pokemonList = await db.pokemon.toArray();
+  const section = document.getElementById("kalos");
+  section.style.display = "flex";
+  const pokeHTML = selectList(pokemonList, 6);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
+async function retrieveDataAlola() {
+  const pokemonList = await db.pokemon.toArray();
+  const section = document.getElementById("alola");
+  section.style.display = "flex";
+  const pokeHTML = selectList(pokemonList, 7);
+  section.innerHTML = pokeHTML;
+  document.body.appendChild(section);
+}
+
+async function retrieveDataGalar() {
+  const pokemonList = await db.pokemon.toArray();
+  const section = document.getElementById("galar");
+  section.style.display = "flex";
+  const pokeHTML = selectList(pokemonList, 8);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
 }
@@ -126,10 +241,6 @@ async function saveFormData(event) {
     name: form.name.value,
     pokeNumber: form.pokeNumber.value,
   });
-
-  await retrieveDataKanto();
-  await retrieveDataJohto();
-  await retriveDataHoen();
 
   form.reset();
   form.name.focus();
@@ -176,29 +287,44 @@ function selectList(pokemonList, id) {
   return pokemon;
 }
 
-
 function selectionRegion() {
   var select = document.getElementById("regionPokemon");
   var selectValue = select.value;
 
-  const sectionKanto = document.getElementById("kanto");
-  const sectionJohto = document.getElementById("johto");
-  const sectionHoen = document.getElementById("hoen");
-
-  sectionKanto.style.display = "none";
-  sectionJohto.style.display = "none";
-  sectionHoen.style.display = "none";
+  document.getElementById("kanto").style.display = "none";
+  document.getElementById("johto").style.display = "none";
+  document.getElementById("hoen").style.display = "none";
+  document.getElementById("sinnoh").style.display = "none";
+  document.getElementById("unova").style.display = "none";
+  document.getElementById("kalos").style.display = "none";
+  document.getElementById("alola").style.display = "none";
+  document.getElementById("galar").style.display = "none";
 
   switch (selectValue) {
     case "1":
-      sectionKanto.style.display = "flex";
       retrieveDataKanto();
+      break;
     case "2":
-      sectionJohto.style.display = "flex";
       retrieveDataJohto();
+      break;
     case "3":
-      sectionHoen.style.display = "flex";
-      retriveDataHoen();
+      retrieveDataHoen();
+      break;
+    case "4":
+      retrieveDataSinnoh();
+      break;
+    case "5":
+      retrieveDataUnova();
+      break;
+    case "6":
+      retrieveDataKalos();
+      break;
+    case "7":
+      retrieveDataAlola();
+      break;
+    case "8":
+      retrieveDataGalar();
+      break;
   }
 }
 
