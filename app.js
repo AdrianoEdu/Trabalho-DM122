@@ -8,6 +8,11 @@ db.version(1).stores({
 
 db.on("populate", async () => {
 
+  const section = document.getElementById("kanto");
+  section.style.display = "none";
+
+  const splashScreen = document.getElementById("splashScreen");
+
   for (var i = 1; i <= 151; i++) {
     const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
     const pokemonName = await pokemon.name;
@@ -21,6 +26,9 @@ db.on("populate", async () => {
       },
     ]);
   }
+
+  const labelKanto = document.getElementById("labelKanto");
+  labelKanto.innerHTML += " Deu certo"
 
   for (var i = 152; i <= 251; i++) {
     const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
@@ -119,6 +127,9 @@ db.on("populate", async () => {
       }
     ])
   }
+
+  splashScreen.style.display = "none";
+
 });
 
 
