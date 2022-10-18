@@ -1,6 +1,7 @@
 import Dexie from "https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.mjs";
 
 const db = new Dexie("pokemonDB");
+const pokeRegion = ["Kanto", "Johto", "Hoen", "Sinnoh", "Unova", "Kalos", "Alola", "Galar"]
 
 db.version(1).stores({
   pokemon: "++id,name",
@@ -11,127 +12,132 @@ db.on("populate", async () => {
   const section = document.getElementById("kanto");
   section.style.display = "none";
 
-  const splashScreen = document.getElementById("splashScreen");
+  createSplashScreen();
+  await getPokemons(db);
 
-  for (var i = 1; i <= 151; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
+  document.getElementById("splash-screen").style.display = "none";
 
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 1,
-      },
-    ]);
-  }
-
-  const labelKanto = document.getElementById("labelKanto");
-  labelKanto.innerHTML += " Deu certo"
-
-  for (var i = 152; i <= 251; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 2,
-      }
-    ])
-  }
-
-  for (var i = 252; i <= 386; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 3,
-      }
-    ])
-  }
-
-  for (var i = 387; i <= 493; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 4,
-      }
-    ])
-  }
-
-  for (var i = 494; i <= 649; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 5,
-      }
-    ])
-  }
-
-  for (var i = 650; i <= 721; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 6,
-      }
-    ])
-  }
-
-  for (var i = 722; i <= 809; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 7,
-      }
-    ])
-  }
-
-  for (var i = 810; i <= 905; i++) {
-    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
-    const pokemonName = await pokemon.name;
-
-    await db.pokemon.bulkPut([
-      {
-        name: pokemonName,
-        picture: await downloadImage(buildUrl(i)),
-        types: pokemon.types,
-        generation: 8,
-      }
-    ])
-  }
-
-  splashScreen.style.display = "none";
-
+  await retrieveDataKanto();
 });
 
+function createSplashScreen() {
+  var splashScreen = createDivsValidatePokedex();
+
+  document.body.appendChild(splashScreen);
+}
+
+function createDivsValidatePokedex() {
+
+  var splashScreen = document.getElementById("splash-screen");
+
+  var divSplashScreen = document.createElement("div");
+  divSplashScreen.className = "div-splash-screen";
+
+  var divLoading = document.createElement("div");
+  divLoading.className = "div-loading-region"
+
+  var paragraph = document.createElement("p");
+  paragraph.innerHTML = "Loading"
+
+  var image = document.createElement("img");
+  image.src = "/images/pokeball/pokeball.png"
+  image.className = "image-pokeball";
+
+  divLoading.appendChild(paragraph);
+  divLoading.appendChild(image);
+  divSplashScreen.appendChild(divLoading);
+  splashScreen.appendChild(divSplashScreen);
+
+  for (var i = 0; i <= 7; i++) {
+
+    var divRegionPokemon = document.createElement("div")
+    divRegionPokemon.className = "div-region-pokemon";
+
+    var paragraph = document.createElement("p")
+    paragraph.innerHTML = pokeRegion[i];
+
+    var image = document.createElement("img");
+    image.id = "div-" + pokeRegion[i];
+    image.src = "/images/validate/false.svg";
+    image.className = "image-state";
+
+    divRegionPokemon.appendChild(paragraph);
+    divRegionPokemon.appendChild(image);
+
+    splashScreen.appendChild(divRegionPokemon);
+  }
+
+  return splashScreen;
+}
+
+async function getPokemons(db) {
+
+  for (var i = 1; i <= 905; i++) {
+    const pokemon = await (await getPokemonUrl(buildPokemonUrl(i)));
+    const pokemonName = await pokemon.name;
+
+    await db.pokemon.bulkPut([
+      {
+        name: pokemonName,
+        picture: await downloadImage(buildUrl(i)),
+        types: pokemon.types,
+        generation: getGeneraion(i),
+      },
+    ]);
+
+    awaitJsonFinish(i)
+  }
+}
+
+function awaitJsonFinish(pokemonId) {
+
+  var div = "div-"
+  switch (pokemonId) {
+    case 151:
+      const imageKanto = document.getElementById(div + pokeRegion[0]);
+      imageKanto.src = "/images/validate/correct.svg"
+      break;
+    case 251:
+      const imageJohto = document.getElementById(div + pokeRegion[1]);
+      imageJohto.src = "/images/validate/correct.svg"
+      break;
+    case 386:
+      const imageHoen = document.getElementById(div + pokeRegion[2]);
+      imageHoen.src = "/images/validate/correct.svg"
+      break;
+    case 493:
+      const imageSinnoh = document.getElementById(div + pokeRegion[3]);
+      imageSinnoh.src = "/images/validate/correct.svg"
+      break;
+    case 649:
+      const imageUnova = document.getElementById(div + pokeRegion[4]);
+      imageUnova.src = "/images/validate/correct.svg"
+      break;
+    case 721:
+      const imageKalos = document.getElementById(div + pokeRegion[5]);
+      imageKalos.src = "/images/validate/correct.svg"
+      break;
+    case 809:
+      const imageAlola = document.getElementById(div + pokeRegion[6]);
+      imageAlola.src = "/images/validate/correct.svg"
+      break;
+    case 905:
+      const imageGalar = document.getElementById(div + pokeRegion[7]);
+      imageGalar.src = "/images/validate/correct.svg"
+      break;
+  }
+}
+
+function getGeneraion(pokeId) {
+  if (pokeId <= 151) return 1;
+  if (pokeId <= 251) return 2;
+  if (pokeId <= 386) return 3;
+  if (pokeId <= 493) return 4;
+  if (pokeId <= 649) return 5;
+  if (pokeId <= 721) return 6;
+  if (pokeId <= 809) return 7;
+  if (pokeId <= 905) return 8;
+}
 
 db.open();
 
