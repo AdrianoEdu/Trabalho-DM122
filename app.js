@@ -29,6 +29,7 @@ function createSplashScreen() {
 function createDivsValidatePokedex() {
 
   var splashScreen = document.getElementById("splash-screen");
+  splashScreen.style.display = "flex";
 
   var divSplashScreen = document.createElement("div");
   divSplashScreen.className = "div-splash-screen";
