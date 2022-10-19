@@ -312,6 +312,9 @@ function toHTML(poke) {
 }
 
 function getImageTypePokemon(pokeType) {
+  if (pokeType === "fairy")
+    return `/images/type/${pokeType}.png`;
+
   return `/images/type/${pokeType}.webp`;
 }
 
