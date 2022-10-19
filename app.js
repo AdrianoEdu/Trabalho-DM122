@@ -81,6 +81,7 @@ async function getPokemons(db) {
       {
         name: pokemonName,
         picture: await downloadImage(buildUrl(i)),
+        pictureFemale: await downloadImage(buildPokemonFemaleUrl(i)),
         types: pokemon.types,
         generation: getGeneraion(i),
       },
@@ -146,6 +147,10 @@ function buildUrl(pokeNumber) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeNumber}.png`;
 }
 
+function buildPokemonFemaleUrl(pokeNumber) {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/female/${pokeNumber}.png`;
+}
+
 function buildPokemonUrl(pokeNumber) {
   return `https://pokeapi.co/api/v2/pokemon/${pokeNumber}`
 }
@@ -186,7 +191,6 @@ async function retrieveDataJohto() {
 
 async function retrieveDataHoen() {
   const pokemonList = await db.pokemon.toArray();
-
   const section = document.getElementById("hoen");
   section.style.display = "flex";
   const pokeHTML = selectList(pokemonList, 3);
