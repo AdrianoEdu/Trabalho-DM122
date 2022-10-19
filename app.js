@@ -277,12 +277,25 @@ async function saveOnDatabase({ name, pokeNumber }) {
 function toHTML(poke) {
   var style = selectGradientFromTypePokemon(poke);
 
-  return `
+  var pokemonType1 = poke.types[0].type.name;
+  var type2 = `<img alt="${poke.name}" src="/images/state/blank.png" width=15px; height = 12px; style="margin-left: 2px">`;
+
+  if (poke.types.length > 1) {
+    type2 = `<img alt="${poke.name}" src="${getImageTypePokemon(poke.types[1].type.name)}" width=15px; height = 12px; style="margin-left: 2px">`;
+  }
+
+  var innerHtml = `
       <a href="#" class="card-wrapper">
-        <div class="card" style="border-color: var(--${poke.types[0].type.name});">
-          <div class="card-id" style="color: var(--${poke.types[0].type.name});">${poke.id}</div>
-          <div class="card-image">
-            <img alt="${poke.name}" src="${URL.createObjectURL(
+        <div class="card" style="border-color: var(--${pokemonType1});">
+        <div class="card-id" style="color: var(--${pokemonType1});">
+          <div class="card-type">
+            <img alt="${poke.name}" src="${getImageTypePokemon(pokemonType1)}" width=15px; height=12px;  >
+            {{img::type2}}
+            <p class="id-pokemon">${poke.id}</p>
+          </div>
+        </div>
+        <div class="card-image">
+        <img alt="${poke.name}" src="${URL.createObjectURL(
     poke.picture
   )}">
           </div>
@@ -292,6 +305,14 @@ function toHTML(poke) {
         </div>
       </a>
   `;
+
+  innerHtml = innerHtml.replace("{{img::type2}}", type2);
+
+  return innerHtml;
+}
+
+function getImageTypePokemon(pokeType) {
+  return `/images/type/${pokeType}.webp`;
 }
 
 function selectList(pokemonList, id) {
