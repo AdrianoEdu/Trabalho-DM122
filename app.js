@@ -81,7 +81,7 @@ async function getPokemons(db) {
       {
         name: pokemonName,
         picture: await downloadImage(buildUrl(i)),
-        pictureFemale: await downloadImage(buildPokemonFemaleUrl(i)),
+        pictureShiny: await downloadImage(buildShinyUrl(i)),
         types: pokemon.types,
         generation: getGeneraion(i),
       },
@@ -147,8 +147,8 @@ function buildUrl(pokeNumber) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeNumber}.png`;
 }
 
-function buildPokemonFemaleUrl(pokeNumber) {
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/female/${pokeNumber}.png`;
+function buildShinyUrl(pokeNumber) {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeNumber}.png`;
 }
 
 function buildPokemonUrl(pokeNumber) {
@@ -300,9 +300,8 @@ function toHTML(poke) {
           </div>
         </div>
         <div class="card-image">
-        <img alt="${poke.name}" src="${URL.createObjectURL(
-    poke.picture
-  )}">
+        <img alt="${poke.name}" onmouseover="this.src='${URL.createObjectURL(poke.pictureShiny)}'"  src="${URL.createObjectURL(
+    poke.picture)}"  onmouseout="this.src='${URL.createObjectURL(poke.picture)}'">
           </div>
         </div>
         <div class="card-name" style="${style};">
