@@ -173,6 +173,8 @@ async function retrieveDataKanto() {
   const pokeHTML = selectList(pokemonList, 1);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+
+  getFunctionClickImg(1, 151)
 }
 
 async function retrieveDataJohto() {
@@ -187,6 +189,7 @@ async function retrieveDataJohto() {
   const pokeHTML = selectList(pokemonList, 2);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(152, 251)
 }
 
 async function retrieveDataHoen() {
@@ -196,6 +199,7 @@ async function retrieveDataHoen() {
   const pokeHTML = selectList(pokemonList, 3);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(252, 386)
 }
 
 async function retrieveDataSinnoh() {
@@ -205,6 +209,7 @@ async function retrieveDataSinnoh() {
   const pokeHTML = selectList(pokemonList, 4);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(387, 493)
 }
 
 async function retrieveDataUnova() {
@@ -214,6 +219,7 @@ async function retrieveDataUnova() {
   const pokeHTML = selectList(pokemonList, 5);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(494, 649)
 }
 
 async function retrieveDataKalos() {
@@ -223,6 +229,7 @@ async function retrieveDataKalos() {
   const pokeHTML = selectList(pokemonList, 6);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(650, 701)
 }
 
 async function retrieveDataAlola() {
@@ -232,6 +239,7 @@ async function retrieveDataAlola() {
   const pokeHTML = selectList(pokemonList, 7);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(702, 809)
 }
 
 async function retrieveDataGalar() {
@@ -241,6 +249,17 @@ async function retrieveDataGalar() {
   const pokeHTML = selectList(pokemonList, 8);
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
+  getFunctionClickImg(810, 905)
+}
+
+function getFunctionClickImg(begin, last) {
+  for (var i = begin; begin <= last; i++) {
+    var component = document.getElementById(i);
+
+    component.addEventListener("click", function () {
+      console.log(this.id);
+    })
+  }
 }
 
 retrieveDataKanto();
@@ -300,8 +319,7 @@ function toHTML(poke) {
           </div>
         </div>
         <div class="card-image">
-        <img alt="${poke.name}" onmouseover="this.src='${URL.createObjectURL(poke.pictureShiny)}'"  src="${URL.createObjectURL(
-    poke.picture)}"  onmouseout="this.src='${URL.createObjectURL(poke.picture)}'">
+        <img alt="${poke.name}" id="${poke.id}" onmouseover="this.src='${URL.createObjectURL(poke.pictureShiny)}'"  src="${URL.createObjectURL(poke.picture)}"  onmouseout="this.src='${URL.createObjectURL(poke.picture)}'">
           </div>
         </div>
         <div class="card-name" style="${style};">
