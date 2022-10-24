@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HTML5 indexedDB Storage</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="popup-style.css" />
   <script src="type.js" type="module" defer></script>
   <script src="app.js" type="module" defer></script>
 </head>
@@ -33,10 +34,7 @@
     <button>Add</button>
   </form>
 
-  <section id="splash-screen" style="display: none">
-
-  </section>
-
+  <section id="splash-screen" style="display: none"></section>
   <section id="kanto" style="display: none">Loading...</section>
   <section id="johto" style="display: none">Loading Johto</section>
   <section id="hoen" style="display: none">Loading Hoen</section>
@@ -45,6 +43,15 @@
   <section id="kalos" style="display: none">Loading Kalos</section>
   <section id="alola" style="display: none">Loading Alola</section>
   <section id="galar" style="display: none">Loading Galar</section>
+
+  <div class="popup-wrapper">
+    <div class="popup">
+      <div class="popup-content">
+        <div class="popup-close">x</div>
+        <h1 id="poke-name"></h1>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

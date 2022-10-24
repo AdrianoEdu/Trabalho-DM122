@@ -91,6 +91,17 @@ async function getPokemons(db) {
   }
 }
 
+async function getPokemonUrl(pokemonUrl) {
+  const response = await fetch(pokemonUrl);
+  return response.json();
+}
+
+async function downloadImage(imageUrl) {
+  const response = await fetch(imageUrl);
+  const blob = await response.blob();
+  return blob;
+}
+
 function awaitJsonFinish(pokemonId) {
 
   var div = "div-"
@@ -178,12 +189,7 @@ async function retrieveDataKanto() {
 }
 
 async function retrieveDataJohto() {
-  const pokemonList = await db.pokemon
-    // .where("name")
-    // .startsWithIgnoreCase("c")
-    // .filter(byChar("a"))
-    .toArray();
-
+  const pokemonList = await db.pokemon.toArray();
   const section = document.getElementById("johto");
   section.style.display = "flex";
   const pokeHTML = selectList(pokemonList, 2);
@@ -256,24 +262,45 @@ function getFunctionClickImg(begin, last) {
   for (var i = begin; begin <= last; i++) {
     var component = document.getElementById(i);
 
-    component.addEventListener("click", function () {
-      console.log(this.id);
+    component.addEventListener("click", async function () {
+      popup.style.display = "block"
+      await getPokemonHabiliy(this.id)
     })
   }
 }
 
+async function getPokemonHabiliy(id) {
+  const pokemonList = await db.pokemon.toArray();
+
+  var pokemon = await pokemonList.filter(function el(poke) {
+    if (poke.id === parseInt(id)) {
+      return poke;
+    }
+  })[0];
+
+  var h2PokeName = document.getElementById("poke-name");
+  h2PokeName.innerHTML = pokemon.name.toUpperCase();
+  h2PokeName.style.borderRadius = "10px"
+
+  const popup = document.querySelector(".popup");
+  popup.style.background = selectGradientFromTypePokemonDOM(pokemon);
+  popup.style.borderRadius = "10px"
+
+
+
+};
+
+function selectList(pokemonList, id) {
+  const pokemon = pokemonList.map((poke) => {
+    if (poke.generation === id) {
+      return toHTML(poke);
+    }
+  }).join("");
+
+  return pokemon;
+}
+
 retrieveDataKanto();
-
-async function getPokemonUrl(pokemonUrl) {
-  const response = await fetch(pokemonUrl);
-  return response.json();
-}
-
-async function downloadImage(imageUrl) {
-  const response = await fetch(imageUrl);
-  const blob = await response.blob();
-  return blob;
-}
 
 async function saveFormData(event) {
   event.preventDefault();
@@ -329,7 +356,6 @@ function toHTML(poke) {
   `;
 
   innerHtml = innerHtml.replace("{{img::type2}}", type2);
-
   return innerHtml;
 }
 
@@ -338,16 +364,6 @@ function getImageTypePokemon(pokeType) {
     return `/images/type/${pokeType}.png`;
 
   return `/images/type/${pokeType}.webp`;
-}
-
-function selectList(pokemonList, id) {
-  const pokemon = pokemonList.map((poke) => {
-    if (poke.generation === id) {
-      return toHTML(poke);
-    }
-  }).join("");
-
-  return pokemon;
 }
 
 function selectionRegion() {
@@ -403,8 +419,34 @@ function selectGradientFromTypePokemon(poke) {
   }
 }
 
+function selectGradientFromTypePokemonDOM(poke) {
+  var type1 = poke.types[0].type.name;
+
+  if (poke.types.length > 1) {
+    var type2 = poke.types[1].type.name;
+    return `linear-gradient(var(--${type1}), var(--${type2}))`;
+  }
+  else {
+    return `var(--${type1})`;
+  }
+}
+
 const select = document.getElementById("regionPokemon");
 select.onchange = selectionRegion;
 
 const form = document.querySelector("form");
 form.addEventListener("submit", saveFormData);
+
+const popup = document.querySelector(".popup-wrapper");
+
+popup.addEventListener("click", event => {
+  const classNameOfClickedElement = event.target.classList[0];
+  const classNames = ["popup-close", "popup-wrapper", "popup-link"];
+
+  const shouldClosePopup = classNames.some(className =>
+    className === classNameOfClickedElement)
+
+  if (shouldClosePopup) {
+    popup.style.display = "none";
+  }
+})
