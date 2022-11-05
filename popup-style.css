@@ -38,3 +38,14 @@
     right: 10px;
     cursor: pointer;
 }
+
+nav ul{
+    height:270px; 
+    width:35%;
+    margin-top: 20px;
+}
+
+nav ul{
+    overflow:hidden; 
+    overflow-y:scroll;
+}

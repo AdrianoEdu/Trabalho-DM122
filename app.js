@@ -84,6 +84,7 @@ async function getPokemons(db) {
         pictureShiny: await downloadImage(buildShinyUrl(i)),
         types: pokemon.types,
         generation: getGeneraion(i),
+        move: pokemon.moves
       },
     ]);
 
@@ -286,8 +287,17 @@ async function getPokemonHabiliy(id) {
   popup.style.background = selectGradientFromTypePokemonDOM(pokemon);
   popup.style.borderRadius = "10px"
 
+  const ul = document.getElementById("moveset-pokemon");
+  ul.innerHTML = "";
 
+  for (var i = 0; i < pokemon.move.length; i++) {
+    var move = pokemon.move[i].move;
 
+    let li = document.createElement("li");
+    li.innerHTML = move.name;
+
+    ul.appendChild(li);
+  }
 };
 
 function selectList(pokemonList, id) {
