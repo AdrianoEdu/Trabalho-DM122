@@ -84,7 +84,8 @@ async function getPokemons(db) {
         pictureShiny: await downloadImage(buildShinyUrl(i)),
         types: pokemon.types,
         generation: getGeneraion(i),
-        move: pokemon.moves
+        move: pokemon.moves,
+        favorite: false
       },
     ]);
 
@@ -348,7 +349,8 @@ function toHTML(poke) {
           </div>
         </div>
         <div class="card-name" style="${style};">
-          ${poke.name}
+        ${poke.name}
+        <img src="${isFavorite(poke.favorite)}" width=15px height=15px style="background-color:red;">
         </div>
       </a>
   `;
@@ -427,6 +429,13 @@ function selectGradientFromTypePokemonDOM(poke) {
   else {
     return `var(--${type1})`;
   }
+}
+
+function isFavorite(favorite) {
+  if (favorite)
+    return "/images/favorite/favorite.webp";
+
+  return "/images/favorite/no-favorite.png";
 }
 
 const select = document.getElementById("regionPokemon");
