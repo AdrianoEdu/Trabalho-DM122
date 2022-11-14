@@ -1,0 +1,11 @@
+{
+  "name": "PWA - Pokemon JS",
+  "short_name": "PWA - POKE",
+  "theme_color": "#3f51b5",
+  "background_color": "#fff",
+  "display": "standalone",
+  "scope": ".",
+  "start_url": "index.html",
+  "icons": [],
+  "splash_pages": null
+}

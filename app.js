@@ -185,8 +185,7 @@ async function retrieveDataKanto() {
   section.style.display = "flex";
   const pokeHTML = selectList(pokemonList, 1);
   section.innerHTML = pokeHTML;
-  document.body.appendChild(section);
-
+  document.body.appendChild(section)
   getFunctionClickImg(1, 151)
 }
 
@@ -198,6 +197,7 @@ async function retrieveDataJohto() {
   section.innerHTML = pokeHTML;
   document.body.appendChild(section);
   getFunctionClickImg(152, 251)
+
 }
 
 async function retrieveDataHoen() {
@@ -263,11 +263,18 @@ async function retrieveDataGalar() {
 function getFunctionClickImg(begin, last) {
   for (var i = begin; begin <= last; i++) {
     var component = document.getElementById(i);
+    var componentFavorite = document.getElementById("favorite-pokemon-" + i)
+
+    componentFavorite.addEventListener("click", async function () {
+      await addFavoritePokemon(this.id);
+    })
 
     component.addEventListener("click", async function () {
       popup.style.display = "block"
-      await getPokemonHabiliy(this.id)
+      await getPokemonHabiliy(this.id);
     })
+
+
   }
 }
 
@@ -350,7 +357,7 @@ function toHTML(poke) {
         </div>
         <div class="card-name" style="${style};">
         ${poke.name}
-        <img src="${isFavorite(poke.favorite)}" width=15px height=15px style="background-color:red;">
+        <img id="favorite-pokemon-${poke.id}" src="${isFavorite(poke.favorite)}" width=15px height=15px style="background-color:red;">
         </div>
       </a>
   `;
@@ -457,3 +464,32 @@ popup.addEventListener("click", event => {
     popup.style.display = "none";
   }
 })
+
+async function addFavoritePokemon(idComponent) {
+  const pokemonList = await db.pokemon.toArray();
+
+  var id = idComponent.split("-")[2];
+
+  var pokemon = await pokemonList.filter(function el(poke) {
+    if (poke.id === parseInt(id)) {
+      return poke;
+    }
+  })[0];
+
+  pokemon.favorite = !pokemon.favorite
+
+  var component = document.getElementById(idComponent);
+  component.src = isFavorite(pokemon.favorite);
+
+  await db.pokemon.put(pokemon, id)
+};
+
+if ('serviceWorker' in navigator) {
+  const onsuccess = () => console.log('[Service Worker] Registered');
+  const onerror = () => console.log('[Service Worker] Registration failed');
+
+  navigator.serviceWorker
+    .register('sw.js')
+    .then(onsuccess)
+    .catch(onerror);
+}
