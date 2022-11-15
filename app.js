@@ -265,6 +265,9 @@ function getFunctionClickImg(begin, last) {
     var component = document.getElementById(i);
     var componentFavorite = document.getElementById("favorite-pokemon-" + i)
 
+    if(component === null && componentFavorite === null)
+      return ;
+
     componentFavorite.addEventListener("click", async function () {
       await addFavoritePokemon(this.id);
     })

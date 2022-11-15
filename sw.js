@@ -10,7 +10,7 @@ const assetsToCache = [
     'images/type/bug.webp',
     'images/type/dark.webp',
     'images/type/dragon.webp',
-    'images/type/eletric.webp',
+    'images/type/electric.webp',
     'images/type/fairy.png',
     'images/type/fighting.webp',
     'images/type/fire.webp',
@@ -30,6 +30,7 @@ const assetsToCache = [
     'index.html',
     'style.css',
     'popup-style.css',
+    'favicon.ico',
     '/'
 ];
 
