@@ -41,7 +41,7 @@ function createDivsValidatePokedex() {
   paragraph.innerHTML = "Loading"
 
   var image = document.createElement("img");
-  image.src = "/images/pokeball/pokeball.png"
+  image.src =  `https://adrianoedu.github.io/Trabalho-DM122/images/pokeball/pokeball.png`
   image.className = "image-pokeball";
 
   divLoading.appendChild(paragraph);
@@ -59,7 +59,7 @@ function createDivsValidatePokedex() {
 
     var image = document.createElement("img");
     image.id = "div-" + pokeRegion[i];
-    image.src = "/images/validate/false.svg";
+    image.src =  `https://adrianoedu.github.io/Trabalho-DM122/images/validate/false.svg`;
     image.className = "image-state";
 
     divRegionPokemon.appendChild(paragraph);
@@ -110,35 +110,35 @@ function awaitJsonFinish(pokemonId) {
   switch (pokemonId) {
     case 151:
       const imageKanto = document.getElementById(div + pokeRegion[0]);
-      imageKanto.src = "/images/validate/correct.svg"
+      imageKanto.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg` 
       break;
     case 251:
       const imageJohto = document.getElementById(div + pokeRegion[1]);
-      imageJohto.src = "/images/validate/correct.svg"
+      imageJohto.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
     case 386:
       const imageHoen = document.getElementById(div + pokeRegion[2]);
-      imageHoen.src = "/images/validate/correct.svg"
+      imageHoen.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
     case 493:
       const imageSinnoh = document.getElementById(div + pokeRegion[3]);
-      imageSinnoh.src = "/images/validate/correct.svg"
+      imageSinnoh.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
     case 649:
       const imageUnova = document.getElementById(div + pokeRegion[4]);
-      imageUnova.src = "/images/validate/correct.svg"
+      imageUnova.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
     case 721:
       const imageKalos = document.getElementById(div + pokeRegion[5]);
-      imageKalos.src = "/images/validate/correct.svg"
+      imageKalos.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
     case 809:
       const imageAlola = document.getElementById(div + pokeRegion[6]);
-      imageAlola.src = "/images/validate/correct.svg"
+      imageAlola.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
     case 905:
       const imageGalar = document.getElementById(div + pokeRegion[7]);
-      imageGalar.src = "/images/validate/correct.svg"
+      imageGalar.src = `https://adrianoedu.github.io/Trabalho-DM122/images/validate/correct.svg`
       break;
   }
 }
@@ -338,7 +338,7 @@ function toHTML(poke) {
   var style = selectGradientFromTypePokemon(poke);
 
   var pokemonType1 = poke.types[0].type.name;
-  var type2 = `<img alt="${poke.name}" src="/images/state/blank.png" width=15px; height = 12px; style="margin-left: 2px">`;
+  var type2 = `<img alt="${poke.name}" src= "https://adrianoedu.github.io/Trabalho-DM122/images/state/blank.png" width=15px; height = 12px; style="margin-left: 2px">`;
 
   if (poke.types.length > 1) {
     type2 = `<img alt="${poke.name}" src="${getImageTypePokemon(poke.types[1].type.name)}" width=15px; height = 12px; style="margin-left: 2px">`;
@@ -370,10 +370,12 @@ function toHTML(poke) {
 }
 
 function getImageTypePokemon(pokeType) {
-  if (pokeType === "fairy")
-    return `/images/type/${pokeType}.png`;
+  db.type
 
-  return `/images/type/${pokeType}.webp`;
+  if (pokeType === "fairy")
+    return `https://adrianoedu.github.io/Trabalho-DM122/images/type/${pokeType}.png`;
+
+  return `https://adrianoedu.github.io/Trabalho-DM122/images/type/${pokeType}.webp`;
 }
 
 function selectionRegion() {
@@ -443,9 +445,9 @@ function selectGradientFromTypePokemonDOM(poke) {
 
 function isFavorite(favorite) {
   if (favorite)
-    return "/images/favorite/favorite.webp";
+    return `https://adrianoedu.github.io/Trabalho-DM122/images/favorite/favorite.webp`;
 
-  return "/images/favorite/no-favorite.png";
+  return `https://adrianoedu.github.io/Trabalho-DM122/images/favorite/no-favorite.png`;
 }
 
 const select = document.getElementById("regionPokemon");
